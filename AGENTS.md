@@ -1,9 +1,82 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# Project Agent Instructions
 
-# This is NOT the Next.js you know
+This project uses:
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- Shadcn UI
+- Zod
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+## Architecture
 
-<!-- END:nextjs-agent-rules -->
+Follow the project architecture documented in:
+
+- `instructions/nextjs-architecture.md`
+- `instructions/page-architecture.md`
+
+Before creating or modifying pages, routes, components,
+server actions or data-access code, read the relevant
+architecture instructions.
+
+## Core principles
+
+- Prefer Server Components.
+- Use Client Components only when necessary.
+- Keep business logic outside UI components.
+- Keep database access outside UI components.
+- Use TypeScript.
+- Validate external input with Zod.
+- Prefer colocating page-specific components.
+- Reuse global components only when appropriate.
+
+## Page architecture
+
+Default page structure:
+
+page.tsx
+_components/
+_actions/
+_data-access/
+
+Read:
+
+`instructions/page-architecture.md`
+
+before creating or significantly modifying a page.
+
+## Workflow
+
+Before implementing:
+
+1. Understand the requested feature.
+2. Inspect the existing implementation.
+3. Identify affected files.
+4. Follow existing architecture.
+5. Avoid unnecessary abstractions.
+
+After implementing:
+
+1. Check TypeScript.
+2. Run lint.
+3. Run relevant tests.
+4. Review for architecture violations.
+
+## Documentation and Context7
+
+Use the Context7 MCP when working with external libraries, frameworks, or APIs.
+
+Consult Context7 when:
+
+- the API or syntax is uncertain;
+- the implementation depends on the installed version;
+- a feature may have changed between versions;
+- an error appears related to a library or framework;
+- using an unfamiliar library or API;
+- implementing features involving Next.js, React, Tailwind CSS, shadcn/ui, Zod, authentication libraries, database libraries, ORMs, or other third-party packages.
+
+Prefer the documentation that matches the versions installed in this project.
+
+Do not use Context7 unnecessarily for simple project logic that is already clear from the repository.
+
+When Context7 is used, always follow the project's architecture and instructions defined in this repository.
