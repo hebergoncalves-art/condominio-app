@@ -1,0 +1,3 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+export async function GET(request: NextRequest) { const code = request.nextUrl.searchParams.get("code"); if (code) { const supabase = await createClient(); await supabase.auth.exchangeCodeForSession(code); const { data: { user } } = await supabase.auth.getUser(); if (user) { const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle(); return NextResponse.redirect(new URL(profile?.role === "staff" ? "/admin" : "/morador", request.url)); } } return NextResponse.redirect(new URL("/login?error=link", request.url)); }

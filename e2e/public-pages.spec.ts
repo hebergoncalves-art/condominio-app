@@ -1,0 +1,2 @@
+import { test, expect } from "@playwright/test";
+test("public home links to passwordless access", async ({ page }) => { await page.goto("/"); await expect(page.getByText("Ocorrências que chegam ao lugar certo.")).toBeVisible(); await page.getByRole("link", { name: "Entrar" }).click(); await expect(page).toHaveURL(/\/login$/); await expect(page.getByText("Receba seu link mágico")).toBeVisible(); });
