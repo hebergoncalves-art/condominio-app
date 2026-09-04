@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CondoManager
 
-## Getting Started
+Última atualização: 2026-09-04
 
-First, run the development server:
+Sistema web para registrar, acompanhar e resolver ocorrências de um condomínio. Moradores podem criar e acompanhar ocorrências; funcionários administram os registros e comentários em uma área protegida.
+
+## Requisitos
+
+- Node.js compatível com o Next.js 16.
+- Um projeto Supabase configurado.
+- CLI do Supabase, caso as migrações sejam executadas localmente.
+
+## Desenvolvimento
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra `http://localhost:3000`. Os demais comandos disponíveis são:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# CondoManager
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Última atualização: 2026-09-04
 
-## Learn More
+Sistema web para registrar, acompanhar e resolver ocorrências de um condomínio. Moradores podem criar e acompanhar ocorrências; funcionários administram os registros e comentários em uma área protegida.
 
-To learn more about Next.js, take a look at the following resources:
+## Requisitos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Node.js compatível com o Next.js 16.
+- Um projeto Supabase configurado.
+- CLI do Supabase, caso as migrações sejam executadas localmente.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Instalação
 
-## Deploy on Vercel
+```bash
+npm install
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Crie um arquivo `.env.local` com:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+INITIAL_STAFF_EMAILS=funcionario@example.com
+RESEND_API_KEY=
+RESEND_FROM=
+```
+
+`INITIAL_STAFF_EMAILS` aceita vários emails separados por vírgula. Apenas esses emails podem concluir o cadastro inicial de funcionário. As chaves privadas não devem ser expostas ao navegador.
+
+## Banco e Storage
+
+As migrações ficam em `supabase/migrations/` e devem ser aplicadas em ordem lexicográfica. Para um Supabase local:
+
+```bash
+supabase start
+supabase db reset
+```
+
+O reset cria tabelas, índices, políticas RLS e o bucket privado `occurrence-photos`. O envio de email exige `RESEND_API_KEY` e `RESEND_FROM`.
+
+## Desenvolvimento
+
+```bash
+npm run dev
+```
+
+Abra `http://localhost:3000`. Os demais comandos disponíveis são:
+
+```bash
+npm run build
+npm run start
+npm run lint
+npm run typecheck
+npm test
+npm run test:e2e
+```
+
+## Rotas principais
+
+- `/`: página pública.
+- `/cadastro`: cadastro de morador.
+- `/cadastro-funcionario`: cadastro inicial de funcionário autorizado.
+- `/login`: entrada por email e senha.
+- `/morador/ocorrencias`: listagem e filtros do morador.
+- `/morador/ocorrencias/nova`: nova ocorrência.
+- `/morador/ocorrencias/[id]`: detalhe, comentários e gestão pelo autor.
+- `/admin`: dashboard de funcionários.
+- `/admin/ocorrencias/[id]`: administração de uma ocorrência.
+
+## Estrutura
+
+- `src/app/`: rotas e Server Actions do App Router.
+- `src/components/`: componentes compartilhados e componentes Shadcn UI.
+- `src/features/occurrences/`: Services e Data Access Layer de ocorrências.
+- `src/lib/`: autenticação, validações, domínio, email e clientes Supabase.
+- `supabase/migrations/`: schema, Storage e políticas RLS.
+- `e2e/`: testes de fluxos públicos.
+
+Leia [docs/project-overview.md](docs/project-overview.md) para o escopo funcional e [docs/architecture.md](docs/architecture.md) para as decisões de organização e persistência.
+
+## Commits
+
+As mensagens de commit seguem o formato Conventional Commits. O hook `commit-msg` rejeita mensagens fora do padrão, por exemplo:
+
+```text
+feat: adicionar filtro por status
+fix: corrigir upload de foto
+docs: atualizar instruções locais
+```
+
+O hook `pre-commit` executa Prettier nos arquivos staged, o typecheck e os testes.

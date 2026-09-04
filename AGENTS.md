@@ -80,3 +80,47 @@ Prefer the documentation that matches the versions installed in this project.
 Do not use Context7 unnecessarily for simple project logic that is already clear from the repository.
 
 When Context7 is used, always follow the project's architecture and instructions defined in this repository.
+
+## Definition of Done
+
+Do not consider a feature complete only because the UI appears to work.
+
+Before declaring implementation complete, verify that:
+
+* all relevant requirements from the PRD and implementation plan are implemented;
+* the implementation follows the architecture defined in this repository;
+* React components do not access the database directly;
+* business rules are not embedded in UI components;
+* database queries are encapsulated in the Data Access Layer;
+* Server Actions remain small and delegate business rules to Services when necessary;
+* Services are used only when real business logic or orchestration exists;
+* Server Components are preferred whenever client-side behavior is not required;
+* Client Components contain only browser interaction and client-side state;
+* all external input is validated on the server;
+* authentication and authorization checks are implemented server-side;
+* RLS and Storage policies enforce the expected authorization model;
+* persistent features use the real persistence layer and are not implemented only with local state, mocks, or temporary demo data;
+* loading, error, empty and unauthorized states are handled;
+* relevant lint, TypeScript and automated tests pass;
+* browser-visible flows are tested with Playwright when applicable;
+* documentation is updated when setup, environment variables or architecture change.
+
+Before declaring the task complete, perform a final self-review against:
+
+1. `AGENTS.md`
+2. relevant files in `instructions/`
+3. the PRD
+4. the implementation plan
+5. tests and acceptance criteria
+
+If any required item remains incomplete, explicitly report it instead of presenting the task as finished.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -1,0 +1,80 @@
+import Link from "next/link";
+import { ClipboardList, Home, LogOut, Plus, Users } from "lucide-react";
+import { signOutAction } from "@/app/(public)/_actions/auth";
+import type { CurrentUser } from "@/lib/domain";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+export function AppShell({
+  user,
+  children,
+}: {
+  user: CurrentUser;
+  children: React.ReactNode;
+}) {
+  const staff = user.role === "staff";
+  const base = staff ? "/admin" : "/morador";
+  return (
+    <div className="min-h-screen bg-background md:grid md:grid-cols-[240px_1fr]">
+      <aside className="hidden border-r bg-card md:flex md:flex-col md:gap-6 md:p-5">
+        <Link
+          href={base}
+          className="font-heading text-2xl font-bold text-primary"
+        >
+          CondoManager
+        </Link>
+        <div className="flex flex-col gap-2">
+          <Link href={staff ? "/admin" : "/morador/ocorrencias"}>
+            <Button variant="ghost" className="justify-start gap-3">
+              <ClipboardList className="size-4" /> Ocorrências
+            </Button>
+          </Link>
+          {!staff && (
+            <Link href="/morador/ocorrencias/nova">
+              <Button className="w-full justify-start gap-3">
+                <Plus className="size-4" /> Nova ocorrência
+              </Button>
+            </Link>
+          )}
+          {staff && (
+            <span className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground">
+              <Users className="size-4" /> Área administrativa
+            </span>
+          )}
+        </div>
+        <div className="mt-auto flex flex-col gap-3">
+          <Separator />
+          <span className="px-3 text-xs text-muted-foreground">
+            {user.displayName}
+          </span>
+          <form action={signOutAction}>
+            <Button
+              type="submit"
+              variant="ghost"
+              className="w-full justify-start gap-3"
+            >
+              <LogOut className="size-4" /> Sair
+            </Button>
+          </form>
+        </div>
+      </aside>
+      <div className="min-w-0">
+        <header className="flex items-center justify-between border-b bg-card px-5 py-4 md:hidden">
+          <Link
+            href={base}
+            className="font-heading text-xl font-bold text-primary"
+          >
+            CondoManager
+          </Link>
+          <form action={signOutAction}>
+            <Button type="submit" variant="ghost" size="icon" aria-label="Sair">
+              <LogOut />
+            </Button>
+          </form>
+        </header>
+        <main className="mx-auto w-full max-w-[1440px] p-5 md:p-10">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}

@@ -7,7 +7,7 @@
 
 ## 1. Visão geral
 
-Sistema web para registrar, acompanhar e resolver ocorrências do condomínio. Moradores acessam por um link mágico enviado ao email, sem criar senha. Funcionários acessam a mesma forma de autenticação, mas utilizam uma área administrativa própria.
+Sistema web para registrar, acompanhar e resolver ocorrências do condomínio. Moradores e funcionários acessam com email e senha, com áreas compatíveis com seus perfis.
 
 O morador poderá cadastrar uma ocorrência, consultar todas as ocorrências do condomínio, filtrar a listagem, abrir detalhes, comentar, editar, excluir e alterar o status de uma ocorrência criada por ele. Funcionários poderão visualizar e administrar todas as ocorrências e comentários.
 
@@ -32,8 +32,8 @@ O recorte prioriza rastreabilidade, facilidade de acesso pelo morador e uma oper
 
 **Essenciais:**
 
-- Cadastro de moradores com nome completo, email, torre/apartamento e telefone, sem senha.
-- Acesso de moradores e funcionários por link mágico enviado ao email.
+- Cadastro de moradores com nome completo, email, senha, torre/apartamento e telefone.
+- Acesso de moradores e funcionários por email e senha.
 - Separação entre área do morador e dashboard de funcionários.
 - Cadastro de ocorrência com título/descrição, categoria, local, foto opcional e status inicial.
 - Categorias fixas: Manutenção, Segurança, Limpeza, Barulho, Iluminação, Elevador, Garagem, Áreas comuns e Outros.
@@ -56,7 +56,7 @@ O recorte prioriza rastreabilidade, facilidade de acesso pelo morador e uma oper
 
 ## 6. Fora do escopo
 
-- Senhas, recuperação de senha ou autenticação por usuário e senha.
+- Recuperação de senha e autenticação social.
 - Cadastro e gerenciamento de categorias pelo usuário.
 - Diferentes níveis de permissão entre funcionários.
 - Notificações por email para criação de ocorrência ou novo comentário.
@@ -69,8 +69,8 @@ O recorte prioriza rastreabilidade, facilidade de acesso pelo morador e uma oper
 
 ## 7. Regras de negócio
 
-- R1: O acesso de moradores e funcionários ocorre por link mágico enviado ao email cadastrado.
-- R2: O morador não precisa e não pode definir uma senha para usar o sistema.
+- R1: O acesso de moradores e funcionários ocorre com email e senha cadastrados.
+- R2: A senha deve ser definida no cadastro e nunca é armazenada pela aplicação fora do Supabase Auth.
 - R3: O cadastro do morador exige nome completo, email, torre/apartamento e telefone.
 - R4: Torre/apartamento e local podem ser informados livremente pelo morador; o sistema deve preservar o texto informado.
 - R5: Cada ocorrência pertence ao morador que a criou e possui uma categoria fixa, local, descrição, data, status e, opcionalmente, uma foto.
@@ -91,12 +91,10 @@ O recorte prioriza rastreabilidade, facilidade de acesso pelo morador e uma oper
 
 ### Fluxo 1 — Cadastro e acesso do morador
 
-1. O morador informa nome completo, email, torre/apartamento e telefone.
+1. O morador informa nome completo, email, senha, torre/apartamento e telefone.
 2. O sistema valida os dados e cria ou atualiza o cadastro, conforme a regra de identificação por email.
-3. O morador solicita acesso informando o email cadastrado.
-4. O sistema envia um link mágico para esse email.
-5. O morador acessa o link dentro do prazo de validade.
-6. O sistema autentica o morador e exibe a área do morador.
+3. O morador informa o email e a senha cadastrados.
+4. O sistema autentica o morador e exibe a área do morador.
 
 ### Fluxo 2 — Cadastro de ocorrência
 
@@ -119,7 +117,7 @@ O recorte prioriza rastreabilidade, facilidade de acesso pelo morador e uma oper
 ### Fluxo 4 — Administração por funcionário
 
 1. O funcionário acessa o link da área administrativa.
-2. Informa seu email cadastrado e recebe um link mágico.
+2. Informa seu email e senha cadastrados.
 3. Após a autenticação, acessa o dashboard.
 4. Consulta e filtra todas as ocorrências.
 5. Abre uma ocorrência, edita seus dados, altera o status ou a exclui.
@@ -128,8 +126,8 @@ O recorte prioriza rastreabilidade, facilidade de acesso pelo morador e uma oper
 
 ## 9. Critérios de aceite
 
-- O morador consegue se cadastrar informando nome completo, email, torre/apartamento e telefone, sem informar senha.
-- O usuário com email cadastrado recebe um link mágico e consegue acessar a área correspondente ao seu perfil.
+- O morador consegue se cadastrar informando nome completo, email, senha, torre/apartamento e telefone.
+- O usuário com email e senha válidos consegue acessar a área correspondente ao seu perfil.
 - O usuário sem cadastro não consegue acessar as áreas protegidas apenas informando um email não reconhecido.
 - O morador consegue criar uma ocorrência com categoria, local e descrição obrigatórios, além de uma foto opcional.
 - O sistema rejeita categoria fora da lista fixa e rejeita mais de uma foto por ocorrência.
@@ -153,12 +151,12 @@ O recorte prioriza rastreabilidade, facilidade de acesso pelo morador e uma oper
 - Tailwind CSS.
 - Componentes de interface acessíveis com Shadcn UI.
 - Zod para validação de entradas.
-- Supabase para autenticação por link mágico, banco de dados e armazenamento da foto.
+- Supabase para autenticação por email e senha, banco de dados e armazenamento da foto.
 - Serviço de email integrado ao fluxo de autenticação e às notificações de alteração de status.
 
 ## 11. Justificativa da stack
 
-A stack já está iniciada no projeto e é adequada para um sistema web com páginas públicas protegidas, dashboard e formulários. O Supabase reduz a complexidade de autenticação sem senha, persistência e armazenamento de imagens. Next.js permite renderizar listagens e detalhes no servidor, mantendo no cliente apenas filtros e interações necessárias.
+A stack já está iniciada no projeto e é adequada para um sistema web com páginas públicas protegidas, dashboard e formulários. O Supabase reduz a complexidade de autenticação com email e senha, persistência e armazenamento de imagens. Next.js permite renderizar listagens e detalhes no servidor, mantendo no cliente apenas filtros e interações necessárias.
 
 ## 12. Referências de UI e design
 
@@ -188,12 +186,12 @@ O conteúdo exibido em `screen.png`, como nome do condomínio, números de ocorr
 
 ### Fase 1 — Base de acesso e perfis
 
-Objetivo: permitir que moradores e funcionários sejam identificados e acessem a área correta sem senha.
+Objetivo: permitir que moradores e funcionários sejam identificados e acessem a área correta com email e senha.
 
 Specs:
 
 - Spec 01 — Cadastro e identificação de moradores
-- Spec 02 — Acesso por link mágico e separação de áreas
+- Spec 02 — Acesso por email e senha e separação de áreas
 - Spec 03 — Cadastro e acesso de funcionários
 
 ### Fase 2 — Registro de ocorrências
@@ -238,10 +236,10 @@ Specs:
 
 - **Fase:** Fase 1 — Base de acesso e perfis
 - **Objetivo (o quê):** Permitir cadastrar um morador com seus dados básicos e associar suas futuras ações ao cadastro correto.
-- **Intenção (por quê):** Criar uma identidade mínima, sem senha, para garantir autoria, comunicação e controle de permissões.
+- **Intenção (por quê):** Criar uma identidade mínima com senha para garantir autoria, comunicação e controle de permissões.
 - **Contexto:** O projeto é um produto inicial sem cadastro existente. O cadastro será usado pelos fluxos de acesso, ocorrências, comentários e notificações.
 - **Atores:** Morador; funcionário autorizado a auxiliar ou cadastrar um morador, se esse fluxo for disponibilizado.
-- **Descrição do comportamento:** O sistema apresenta formulário para nome completo, email, torre/apartamento e telefone. Após validação, cria o cadastro. Email identifica o morador para o acesso sem senha. Se o email já existir, o sistema não cria duplicidade e informa o caminho adequado para continuar ou atualizar os dados.
+- **Descrição do comportamento:** O sistema apresenta formulário para nome completo, email, senha, torre/apartamento e telefone. Após validação, cria o cadastro. Email e senha identificam o morador para o acesso. Se o email já existir, o sistema não cria duplicidade e informa o caminho adequado para continuar.
 - **Entradas e saídas:** Entram dados de identificação informados no formulário. Sai um cadastro confirmado e uma mensagem de sucesso ou erro.
 - **Dados/entidades envolvidos (conceitual):** Morador: nome completo, email, torre/apartamento, telefone, perfil e datas de criação/atualização.
 - **Estados e transições:** Não cadastrado → cadastro pendente de validação → cadastrado. Cadastro existente → atualização solicitada → dados atualizados, quando permitido.
@@ -255,38 +253,36 @@ Specs:
 - **Casos de borda e erros:** Email inválido, campos vazios, email já cadastrado ou falha de persistência devem impedir cadastro incompleto e mostrar mensagem acionável.
 - **Impacto no existente:** Nenhum; o projeto não possui cadastro funcional.
 - **Critérios de aceite (Dado/Quando/Então):**
-  - Dado um formulário válido, quando o morador enviar, então o sistema cria um único cadastro sem solicitar senha.
+  - Dado um formulário válido, quando o morador enviar, então o sistema cria um único cadastro com senha.
   - Dado um email já cadastrado, quando o morador tentar cadastrar novamente, então o sistema não duplica o cadastro.
   - Dado um campo obrigatório vazio, quando o formulário for enviado, então o sistema rejeita a operação e indica o campo.
 - **Definição de pronto:** Cadastro criado, duplicidade tratada, validações testadas e mensagens de sucesso/erro disponíveis.
 - **Dependências:** Nenhuma.
 - **Fora do escopo desta spec:** Recuperação de senha, importação em massa e gerenciamento de funcionários.
 
-### Spec 02 — Acesso por link mágico e separação de áreas
+### Spec 02 — Acesso por email e senha e separação de áreas
 
 - **Fase:** Fase 1 — Base de acesso e perfis
-- **Objetivo (o quê):** Autenticar usuários por link mágico e direcioná-los à área de morador ou à área administrativa correspondente ao perfil.
-- **Intenção (por quê):** Remover a necessidade de senhas sem deixar o sistema aberto a qualquer email.
+- **Objetivo (o quê):** Autenticar usuários por email e senha e direcioná-los à área de morador ou à área administrativa correspondente ao perfil.
+- **Intenção (por quê):** Permitir acesso direto e protegido sem deixar o sistema aberto a qualquer email.
 - **Contexto:** Depende do cadastro de perfis e será usado por todas as ações protegidas.
 - **Atores:** Morador; funcionário.
-- **Descrição do comportamento:** O usuário informa o email. O sistema verifica se há cadastro habilitado, envia link mágico com validade limitada e, após o clique, cria sessão autenticada. O usuário é direcionado à área compatível com seu perfil. Links expirados, usados ou inválidos devem ser recusados.
-- **Entradas e saídas:** Entra email e, depois, token do link. Sai sessão autenticada, redirecionamento e mensagens de resultado.
-- **Dados/entidades envolvidos (conceitual):** Usuário: email, perfil, status de acesso e sessão; link de acesso: token, validade e uso.
-- **Estados e transições:** Desconectado → email informado → link enviado → link validado → autenticado; link enviado → expirado ou utilizado → acesso recusado.
-- **Regras de negócio:** Apenas emails cadastrados e habilitados podem receber acesso. Moradores não entram no dashboard administrativo. Funcionários não dependem de senha.
-- **Validações:** Email válido, cadastro existente, perfil permitido, token íntegro, não expirado e não utilizado.
+- **Descrição do comportamento:** O usuário informa email e senha. O sistema verifica se há cadastro habilitado, autentica as credenciais e direciona o usuário à área compatível com seu perfil.
+- **Entradas e saídas:** Entram email e senha. Sai sessão autenticada, redirecionamento e mensagens de resultado.
+- **Dados/entidades envolvidos (conceitual):** Usuário: email, senha gerenciada pelo Supabase Auth, perfil, status de acesso e sessão.
+- **Estados e transições:** Desconectado → credenciais informadas → credenciais validadas → autenticado; credenciais inválidas → acesso recusado.
+- **Regras de negócio:** Apenas emails cadastrados e habilitados podem acessar. Moradores não entram no dashboard administrativo. Funcionários usam o mesmo fluxo de email e senha.
+- **Validações:** Email válido, senha informada, cadastro existente, perfil permitido e status habilitado.
 - **Fluxo do usuário (passo a passo):**
-  1. Usuário informa email.
-  2. Solicita acesso.
-  3. Recebe e abre o link.
-  4. O sistema valida o link e cria a sessão.
-  5. O sistema redireciona conforme o perfil.
-- **Casos de borda e erros:** Email não cadastrado, link expirado, link já utilizado, solicitação repetida e falha de email devem gerar respostas seguras sem revelar dados desnecessários.
+  1. Usuário informa email e senha.
+  2. Envia o formulário de acesso.
+  3. O sistema valida as credenciais e cria a sessão.
+  4. O sistema redireciona conforme o perfil.
+- **Casos de borda e erros:** Email não cadastrado, senha incorreta, acesso desabilitado e sessão expirada devem gerar respostas seguras sem revelar dados desnecessários.
 - **Impacto no existente:** Introduz o controle de acesso do produto.
 - **Critérios de aceite (Dado/Quando/Então):**
-  - Dado um email habilitado, quando o usuário solicitar acesso, então recebe um link mágico.
-  - Dado um link válido, quando o usuário o abrir, então recebe uma sessão e a área correta.
-  - Dado um link expirado, quando o usuário tentar utilizá-lo, então o sistema nega acesso e oferece nova solicitação.
+  - Dado um email e senha habilitados, quando o usuário enviar o formulário, então recebe uma sessão e a área correta.
+  - Dado uma senha incorreta, quando o usuário tentar entrar, então o sistema nega acesso.
 - **Definição de pronto:** Acesso dos dois perfis funciona, áreas são separadas e tokens inválidos não autenticam usuários.
 - **Dependências:** Spec 01 — cadastro de usuários e perfis.
 - **Fora do escopo desta spec:** Alteração de perfil pelo próprio usuário e autenticação social.
@@ -296,9 +292,9 @@ Specs:
 - **Fase:** Fase 1 — Base de acesso e perfis
 - **Objetivo (o quê):** Disponibilizar funcionários habilitados para acessar o dashboard com as mesmas permissões entre si.
 - **Intenção (por quê):** Garantir que a operação administrativa tenha um espaço protegido e que qualquer funcionário autorizado consiga tratar ocorrências.
-- **Contexto:** Usa o mesmo acesso por link mágico, mas com perfil administrativo.
+- **Contexto:** Usa o mesmo acesso por email e senha, mas com perfil administrativo.
 - **Atores:** Funcionário responsável pelo cadastro inicial; funcionário cadastrado.
-- **Descrição do comportamento:** O sistema mantém o perfil de funcionário com nome e email. Funcionários habilitados acessam o dashboard por link mágico e veem todas as ocorrências. Todos têm o mesmo conjunto de permissões neste recorte.
+- **Descrição do comportamento:** O sistema mantém o perfil de funcionário com nome e email. Funcionários habilitados acessam o dashboard por email e senha e veem todas as ocorrências. Todos têm o mesmo conjunto de permissões neste recorte.
 - **Entradas e saídas:** Entram nome, email e solicitação de acesso. Sai perfil administrativo habilitado ou acesso recusado.
 - **Dados/entidades envolvidos (conceitual):** Funcionário: nome, email, perfil, status habilitado e datas de acesso.
 - **Estados e transições:** Não habilitado → habilitado → autenticado; habilitado → desabilitado → acesso recusado.
@@ -306,8 +302,8 @@ Specs:
 - **Validações:** Email válido, cadastro autorizado, perfil de funcionário e status habilitado.
 - **Fluxo do usuário (passo a passo):**
   1. Um responsável cadastra ou habilita o funcionário.
-  2. O funcionário informa seu email na entrada administrativa.
-  3. Recebe e abre o link mágico.
+  2. O funcionário define uma senha no primeiro acesso usando um email autorizado.
+  3. Informa seu email e senha na entrada.
   4. Acessa o dashboard.
 - **Casos de borda e erros:** Funcionário não habilitado, email inexistente, link inválido ou sessão expirada devem impedir acesso e mostrar mensagem genérica.
 - **Impacto no existente:** Introduz a área administrativa e o perfil de funcionário.
@@ -316,7 +312,7 @@ Specs:
   - Dado um funcionário habilitado, quando consultar uma ocorrência, então pode administrá-la.
   - Dado um email sem perfil de funcionário, quando tentar acessar o dashboard, então o sistema nega o acesso.
 - **Definição de pronto:** Funcionário habilitado acessa, funcionário não habilitado é bloqueado e permissões são uniformes.
-- **Dependências:** Spec 02 — acesso por link mágico.
+- **Dependências:** Spec 02 — acesso por email e senha.
 - **Fora do escopo desta spec:** Hierarquia, auditoria avançada e gestão completa de funcionários.
 
 ### Spec 04 — Criação de ocorrência
@@ -539,7 +535,7 @@ Specs:
   3. Repetir ações com usuário sem permissão.
   4. Simular entradas inválidas e falhas relevantes.
   5. Confirmar listagens, detalhes, emails e mensagens.
-- **Casos de borda e erros:** Nenhum resultado, link expirado, sessão expirada, duplicidade, upload inválido, ocorrência excluída e falha de email devem possuir comportamento definido.
+- **Casos de borda e erros:** Nenhum resultado, credencial inválida, sessão expirada, duplicidade, upload inválido, ocorrência excluída e falha de email devem possuir comportamento definido.
 - **Impacto no existente:** Valida todo o produto inicial.
 - **Critérios de aceite (Dado/Quando/Então):**
   - Dado morador não autor, quando tentar alterar ocorrência de outro morador, então a operação é recusada no servidor e a ocorrência permanece intacta.
@@ -552,7 +548,7 @@ Specs:
 ## 15. Ordem recomendada de implementação
 
 1. Spec 01 — Cadastro e identificação de moradores
-2. Spec 02 — Acesso por link mágico e separação de áreas
+2. Spec 02 — Acesso por email e senha e separação de áreas
 3. Spec 03 — Cadastro e acesso de funcionários
 4. Spec 04 — Criação de ocorrência
 5. Spec 05 — Upload e visualização da foto da ocorrência
