@@ -1,2 +1,23 @@
-import Link from "next/link"; import { ArrowLeft } from "lucide-react"; import { OccurrenceForm } from "@/components/occurrence-form"; import { createOccurrenceAction } from "../_actions/occurrences"; import { Button } from "@/components/ui/button";
-export default function NewOccurrencePage() { return <div className="mx-auto flex max-w-2xl flex-col gap-6"><Link href="/morador/ocorrencias"><Button variant="ghost"><ArrowLeft data-icon="inline-start" /> Voltar para ocorrências</Button></Link><div><h1 className="font-heading text-4xl font-bold">Nova ocorrência</h1><p className="mt-2 text-muted-foreground">Conte o que aconteceu para que o condomínio possa acompanhar.</p></div><OccurrenceForm action={async (data) => createOccurrenceAction(undefined, data)} /></div>; }
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { OccurrenceForm } from "@/components/occurrence-form";
+import { createOccurrenceAction } from "../_actions/occurrences";
+import { Button } from "@/components/ui/button";
+export default function NewOccurrencePage() {
+  return (
+    <div className="mx-auto flex max-w-2xl flex-col gap-6">
+      <Link href="/morador/ocorrencias">
+        <Button variant="ghost">
+          <ArrowLeft data-icon="inline-start" /> Voltar para ocorrências
+        </Button>
+      </Link>
+      <div>
+        <h1 className="font-heading text-4xl font-bold">Nova ocorrência</h1>
+        <p className="mt-2 text-muted-foreground">
+          Conte o que aconteceu para que o condomínio possa acompanhar.
+        </p>
+      </div>
+      <OccurrenceForm action={createOccurrenceAction.bind(null, undefined)} />
+    </div>
+  );
+}

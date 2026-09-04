@@ -1,4 +1,66 @@
 import Link from "next/link";
 import { ShieldCheck, Wrench, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-export default function HomePage() { return <div className="mx-auto flex min-h-screen max-w-6xl flex-col justify-between gap-16 px-5 py-8 md:px-10"><header className="flex items-center justify-between"><span className="font-heading text-2xl font-bold text-primary">CondoManager</span><Link href="/login"><Button variant="outline">Entrar</Button></Link></header><section className="grid items-center gap-12 py-10 md:grid-cols-[1.1fr_.9fr]"><div className="flex flex-col gap-6"><p className="text-sm font-semibold uppercase tracking-[.18em] text-primary">Civic Horizon</p><h1 className="font-heading text-5xl font-bold tracking-tight text-foreground md:text-7xl">Ocorrências que chegam ao lugar certo.</h1><p className="max-w-xl text-lg leading-8 text-muted-foreground">Registre problemas, acompanhe cada atualização e mantenha o condomínio informado em um só espaço.</p><div className="flex flex-wrap gap-3"><Link href="/cadastro"><Button size="lg">Criar cadastro <ArrowRight data-icon="inline-end" /></Button></Link><Link href="/login"><Button size="lg" variant="ghost">Já tenho acesso</Button></Link></div></div><div className="rounded-3xl border border-primary/10 bg-primary p-8 text-primary-foreground shadow-xl"><div className="flex flex-col gap-8"><div className="flex size-14 items-center justify-center rounded-2xl bg-white/15"><Wrench className="size-7" /></div><div className="flex flex-col gap-3"><h2 className="font-heading text-3xl font-semibold">Mais clareza para a vida em comunidade.</h2><p className="text-primary-foreground/75">Um histórico simples para moradores e uma operação objetiva para funcionários.</p></div><div className="flex items-center gap-3 text-sm"><ShieldCheck className="size-5" /> Acesso seguro por link mágico</div></div></div></section><footer className="border-t py-5 text-sm text-muted-foreground">Condomínio Horizonte · Gestão transparente de ocorrências</footer></div>; }
+
+export default function HomePage() {
+  return (
+    <div className="mx-auto flex min-h-screen max-w-6xl flex-col justify-between gap-16 px-5 py-8 md:px-10">
+      <header className="flex items-center justify-between">
+        <span className="font-heading text-2xl font-bold text-primary">
+          CondoManager
+        </span>
+        <Link href="/login">
+          <Button variant="outline">Entrar</Button>
+        </Link>
+      </header>
+      <section className="grid items-center gap-12 py-10 md:grid-cols-[1.1fr_.9fr]">
+        <div className="flex flex-col gap-6">
+          <p className="text-sm font-semibold uppercase tracking-[.18em] text-primary">
+            Civic Horizon
+          </p>
+          <h1 className="font-heading text-5xl font-bold tracking-tight text-foreground md:text-7xl">
+            Ocorrências que chegam ao lugar certo.
+          </h1>
+          <p className="max-w-xl text-lg leading-8 text-muted-foreground">
+            Registre problemas, acompanhe cada atualização e mantenha o
+            condomínio informado em um só espaço.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/cadastro">
+              <Button size="lg">
+                Criar cadastro <ArrowRight data-icon="inline-end" />
+              </Button>
+            </Link>
+            <Link href="/login">
+              <Button size="lg" variant="ghost">
+                Já tenho acesso
+              </Button>
+            </Link>
+          </div>
+        </div>
+        <div className="rounded-3xl border border-primary/10 bg-primary p-8 text-primary-foreground shadow-xl">
+          <div className="flex flex-col gap-8">
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-white/15">
+              <Wrench className="size-7" />
+            </div>
+            <div className="flex flex-col gap-3">
+              <h2 className="font-heading text-3xl font-semibold">
+                Mais clareza para a vida em comunidade.
+              </h2>
+              <p className="text-primary-foreground/75">
+                Um histórico simples para moradores e uma operação objetiva para
+                funcionários.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 text-sm">
+              <ShieldCheck className="size-5" /> Acesso seguro com email e senha
+            </div>
+          </div>
+        </div>
+      </section>
+      <footer className="border-t py-5 text-sm text-muted-foreground">
+        Condomínio Horizonte · Gestão transparente de ocorrências
+      </footer>
+    </div>
+  );
+}
